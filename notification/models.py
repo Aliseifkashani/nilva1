@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
-from django.utils.translation import gettext_lazy as _
 
 
 class Notification(models.Model):
@@ -17,27 +16,9 @@ class Notification(models.Model):
     time_created = models.DateField(default=now)
     buffer_time = models.DateField(default=now)
     time_to_send = models.DateField(default=now)
-    # notification_types = ArrayField(
-    #     models.CharField(max_length=10, blank=True),
-    # )
-    class Types(models.TextChoices):
-        Email = 'E', _('Email')
-        SMS = 'S', _('SMS')
-        Telegram_Message = 'T', _('Telegram_Message')
-        Firebase_Notification = 'F', _('Firebase_Notification')
-
-    notif_types = models.CharField(
-        max_length=1,
-        choices=Types.choices,
-        default=Types.Email,
+    notification_types = ArrayField(
+        models.CharField(max_length=10, blank=True), size=4
     )
-
-
-
-
-
-
-
 
 
 class UserManager(BaseUserManager):

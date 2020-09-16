@@ -1,18 +1,20 @@
 import ast
+from kavenegar import *
 import jwt
 from django.contrib.auth import user_logged_in
 from django.http import HttpResponse, JsonResponse
 # from .models import User as Main_User
 from django.contrib.auth.models import User
-from rest_framework.authentication import get_authorization_header
 from rest_framework import status, exceptions
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_decode_handler
 from datetime import datetime
+from django.core.mail import send_mail
 
 from nilva1.settings import SECRET_KEY
 from notification.serializers import UserSerializer
@@ -43,9 +45,16 @@ def authorization(request):
 def add_notif(request):
     dict_str = request.body.decode("UTF-8")
     body = ast.literal_eval(dict_str)
-    new_notif = Notification(title=body['title'], description=body['description'], relevant_staff=
-    list(body['relevant_staff']), time_created=datetime.strptime(body['time_created'], '%d/%m/%y %H:%M:%S'),
-                             time_to_send=datetime.strptime(body['time_to_send'], '%d/%m/%y %H:%M:%S'))
+    new_notif = Notification(
+        title=body['title'],
+        description=body['description'],
+        creator=body['creator'],
+        relevant_staff=body['relevant_staff'],
+        time_created=datetime.strptime(body['time_created'], '%d/%m/%y %H:%M:%S'),
+        buffer_time=datetime.strptime(body['buffer_time'], '%d/%m/%y %H:%M:%S'),
+        time_to_send = datetime.strptime(body['time_to_send'], '%d/%m/%y %H:%M:%S'),
+        notification_types=body['notification_types'],
+    )
     new_notif.save()
     return JsonResponse('Successful Operation', safe=False)
 
@@ -61,12 +70,20 @@ def edit_notif(request):
         editing_notif.title = body['title']
     if 'description' in body:
         editing_notif.description = body['description']
+    if 'creator' in body:
+        editing_notif.description = body['creator']
+    if 'creator' in body:
+        editing_notif.description = body['creator']
     if 'relevant_staff' in body:
         editing_notif.relevant_staff = body['relevant_staff']
     if 'time_created' in body:
-        editing_notif.time_created = body['time_created']
+        editing_notif.time_created = datetime.strptime(body['time_created'], '%d/%m/%y %H:%M:%S'),
+    if 'buffer_time' in body:
+        editing_notif.time_created = datetime.strptime(body['buffer_time'], '%d/%m/%y %H:%M:%S'),
     if 'time_to_send' in body:
-        editing_notif.time_to_send = body['time_to_send']
+        editing_notif.time_created = datetime.strptime(body['time_to_send'], '%d/%m/%y %H:%M:%S'),
+    if 'notification_types' in body:
+        editing_notif.notification_types = body['notification_types']
 
     editing_notif.save()
     return HttpResponse('Successful Operation')
@@ -79,13 +96,41 @@ def delete_notif(request):
         deleing_notif = Notification.objects.get(id=int(body['id']))
     except Exception:
         return HttpResponse('Invalid Notification ID!')
-    Notification.objects.get(id=int(body['id'])).delete()
+    deleing_notif.delete()
     return HttpResponse('Successful Operation')
 
 
+def email_notif(request):
+    dict_str = request.body.decode("UTF-8")
+    body = ast.literal_eval(dict_str)
+    title = body['title']
+    content = body['content']
+    from_mail = body['from_mail']
+    to_mail = body['to_mail']
+    send_mail(title, content, from_mail, to_mail, fail_silently=False)
+    return HttpResponse('Successful Operation')
 
 
-
+def SMS_notif(request):
+    dict_str = request.body.decode("UTF-8")
+    body = ast.literal_eval(dict_str)
+    receptor = body['receptor']
+    message = body['message']
+    try:
+        api = KavenegarAPI(
+            '51474735396C536947576930554D724332327075506E78667532482B58462B71672B5A7148554E753939733D',
+        )
+        params = {
+            # 'sender': '1000596446',# optional
+            'receptor': receptor,# multiple mobile number, split by comma
+            'message': message,
+        }
+        response = api.sms_send(params)
+        print(response)
+    except APIException as e:
+        print(e)
+    except HTTPException as e:
+        print(e)
 
 
 class CreateUserAPIView(APIView):
