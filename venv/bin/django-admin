@@ -1,4 +1,4 @@
-#!/root/PycharmProjects/nilva1/venv/bin/python
+#!/home/mohammadali/PycharmProjects/nilva1/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
