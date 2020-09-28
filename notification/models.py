@@ -11,14 +11,20 @@ class Notification(models.Model):
     description = models.TextField()
     creator = models.CharField(max_length=100, default='')
     relevant_staff = ArrayField(
-        models.CharField(max_length=10, blank=True),
+        models.CharField(max_length=20, blank=True),
     )
     time_created = models.DateField(default=now)
     buffer_time = models.DateField(default=now)
     time_to_send = models.DateField(default=now)
     notification_types = ArrayField(
-        models.CharField(max_length=10, blank=True), size=4
+        models.CharField(max_length=10, blank=True), size=5, default='email'
     )
+    repeat = models.IntegerField(default=1)
+    interval = models.IntegerField(default=24, help_text='in hour')
+    task_id = models.CharField(default='', max_length=100, blank=True)
+
+    def __str__(self):
+        return self.title + ' in ' + str(self.time_to_send)
 
 
 class UserManager(BaseUserManager):
@@ -62,6 +68,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    chat_id = models.CharField(max_length=20, default='')
 
     objects = UserManager()
 
