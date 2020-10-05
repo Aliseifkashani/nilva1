@@ -20,7 +20,8 @@ import io
 from rest_framework.parsers import JSONParser
 
 from nilva1.settings import SECRET_KEY
-from notification.serializers import UserSerializer, NotificationSerializer
+from notification.serializers import NotificationSerializer
+from user.serializers import UserSerializer
 from .models import Notification
 from . import tasks
 

@@ -5,7 +5,7 @@ from kavenegar import *
 from django.template.loader import render_to_string
 
 from nilva1.celery import app
-from notification.models import User
+from user.models import User
 
 
 @app.task

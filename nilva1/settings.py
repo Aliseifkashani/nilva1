@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'notification',
+    'user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -146,7 +147,7 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=15),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
@@ -160,4 +161,4 @@ EMAIL_HOST_PASSWORD = 'xiidjxfvujhsvbxm'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
-# AUTH_USER_MODEL = 'notification.models.User'
+AUTH_USER_MODEL = 'user.User'
