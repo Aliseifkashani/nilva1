@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bb9dd26b-5373-47e1-8eb3-e3d22ee5e500" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="0a26a288-9803-4bb5-aacb-73e2f7759cf8" />
+  <component name="ProjectId" id="1ha7LgjQsiUYWRagDtwWfqUOExd" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/.gitignore" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Django Server.nilva1">
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="nilva1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="nilva1" type="Python.DjangoServer" factoryName="Django server">
+      <module name="nilva1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Django Server.nilva1" />
+      <item itemvalue="Python.test" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb9dd26b-5373-47e1-8eb3-e3d22ee5e500" name="Default Changelist" comment="" />
+      <created>1600237296016</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600237296016</updated>
+      <workItem from="1600237297265" duration="4192000" />
+      <workItem from="1600288033821" duration="2166000" />
+      <workItem from="1600322212622" duration="3121000" />
+      <workItem from="1600337509160" duration="694000" />
+      <workItem from="1600344867932" duration="867000" />
+      <workItem from="1600350233574" duration="769000" />
+      <workItem from="1600492259912" duration="945000" />
+      <workItem from="1600500047634" duration="5149000" />
+      <workItem from="1600512963459" duration="599000" />
+      <workItem from="1600513718693" duration="41000" />
+      <workItem from="1600522668758" duration="4805000" />
+      <workItem from="1600574421335" duration="2097000" />
+      <workItem from="1600581720748" duration="446000" />
+      <workItem from="1600582310482" duration="625000" />
+      <workItem from="1600583060808" duration="6451000" />
+      <workItem from="1600594612883" duration="6741000" />
+      <workItem from="1600610320393" duration="11000" />
+      <workItem from="1600676141087" duration="7276000" />
+      <workItem from="1600705042058" duration="2371000" />
+      <workItem from="1600757842165" duration="9352000" />
+      <workItem from="1600777731116" duration="1834000" />
+      <workItem from="1600934415350" duration="114000" />
+      <workItem from="1601194355926" duration="537000" />
+      <workItem from="1601208576504" duration="3883000" />
+      <workItem from="1601271805739" duration="3078000" />
+      <workItem from="1601275028355" duration="339000" />
+      <workItem from="1601275408301" duration="3589000" />
+      <workItem from="1601387255028" duration="969000" />
+      <workItem from="1601534400727" duration="7135000" />
+      <workItem from="1601796280620" duration="9556000" />
+      <workItem from="1601816038285" duration="2494000" />
+      <workItem from="1601818542878" duration="3337000" />
+      <workItem from="1601880534130" duration="7973000" />
+      <workItem from="1601967543273" duration="3885000" />
+      <workItem from="1601971452336" duration="831000" />
+      <workItem from="1601972907307" duration="2734000" />
+    </task>
+    <task id="LOCAL-00001" summary="email and sms notification (without celery yet)">
+      <created>1600290143048</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1600290143049</updated>
+    </task>
+    <task id="LOCAL-00002" summary="celery apply_async &#10;jwt authentication">
+      <created>1601278010564</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1601278010564</updated>
+    </task>
+    <task id="LOCAL-00003" summary="google calendar api&#10;html email">
+      <created>1601278191365</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1601278191365</updated>
+    </task>
+    <task id="LOCAL-00004" summary="CustomUser">
+      <created>1601895049704</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1601895049704</updated>
+    </task>
+    <task id="LOCAL-00005" summary="experimental &#10;before familiarity with git flow">
+      <created>1601969058342</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1601969058342</updated>
+    </task>
+    <task id="LOCAL-00006" summary="experimental &#10;before familiarity with git flow">
+      <created>1601970124326</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1601970124326</updated>
+    </task>
+    <task id="LOCAL-00007" summary="vnev removed">
+      <created>1601971259820</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1601971259820</updated>
+    </task>
+    <task id="LOCAL-00008" summary=".idea removed from git">
+      <created>1601971485667</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1601971485667</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add venv to git for experiment">
+      <created>1601980541265</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1601980541265</updated>
+    </task>
+    <task id="LOCAL-00010" summary="remove venv from git for experiment">
+      <created>1601980688308</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1601980688308</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="requirements.txt" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="email and sms notification (without celery yet)" />
+    <MESSAGE value="celery apply_async &#10;jwt authentication" />
+    <MESSAGE value="google calendar api&#10;html email" />
+    <MESSAGE value="CustomUser" />
+    <MESSAGE value="experimental &#10;before familiarity with git flow" />
+    <MESSAGE value="vnev removed" />
+    <MESSAGE value=".idea removed from git" />
+    <MESSAGE value="add venv to git for experiment" />
+    <MESSAGE value="remove venv from git for experiment" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove venv from git for experiment" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="254" y="80" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600237444763">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="254" y="80" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1600.805@0.27.1600.805" timestamp="1600237444763" />
+    <state x="467" y="120" width="655" height="626" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601274558836">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="467" y="120" width="655" height="626" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.27.1600.805@0.27.1600.805" timestamp="1601274558836" />
+    <state x="247" y="27" width="1096" height="805" key="CommitChangelistDialog2" timestamp="1601980688191">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="247" y="27" width="1096" height="805" key="CommitChangelistDialog2/0.27.1600.805@0.27.1600.805" timestamp="1601980688191" />
+    <state x="515" y="137" width="530" height="605" key="FileChooserDialogImpl" timestamp="1601896514993">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="515" y="137" width="530" height="605" key="FileChooserDialogImpl/0.27.1600.805@0.27.1600.805" timestamp="1601896514993" />
+    <state width="1544" height="193" key="GridCell.Tab.0.bottom" timestamp="1601899890137">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state width="1544" height="193" key="GridCell.Tab.0.bottom/0.27.1600.805@0.27.1600.805" timestamp="1601899890137" />
+    <state width="1544" height="193" key="GridCell.Tab.0.center" timestamp="1601899890134">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state width="1544" height="193" key="GridCell.Tab.0.center/0.27.1600.805@0.27.1600.805" timestamp="1601899890134" />
+    <state width="1544" height="193" key="GridCell.Tab.0.left" timestamp="1601899890132">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state width="1544" height="193" key="GridCell.Tab.0.left/0.27.1600.805@0.27.1600.805" timestamp="1601899890132" />
+    <state width="1544" height="193" key="GridCell.Tab.0.right" timestamp="1601899890136">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state width="1544" height="193" key="GridCell.Tab.0.right/0.27.1600.805@0.27.1600.805" timestamp="1601899890136" />
+    <state x="68" y="27" width="1261" height="805" key="SettingsEditor" timestamp="1601980465448">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="68" y="27" width="1261" height="805" key="SettingsEditor/0.27.1600.805@0.27.1600.805" timestamp="1601980465448" />
+    <state x="295" y="102" width="1000" height="661" key="Vcs.Push.Dialog.v2" timestamp="1601980691774">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="295" y="102" width="1000" height="661" key="Vcs.Push.Dialog.v2/0.27.1600.805@0.27.1600.805" timestamp="1601980691774" />
+    <state x="510" y="105" width="559" height="656" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog" timestamp="1601278149540">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="510" y="105" width="559" height="656" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog/0.27.1600.805@0.27.1600.805" timestamp="1601278149540" />
+    <state x="420" y="27" width="764" height="805" key="find.popup" timestamp="1601805032747">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="420" y="27" width="764" height="805" key="find.popup/0.27.1600.805@0.27.1600.805" timestamp="1601805032747" />
+    <state x="461" y="312" width="668" height="242" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1601969360654">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="461" y="312" width="668" height="242" key="git4idea.remote.GitConfigureRemotesDialog/0.27.1600.805@0.27.1600.805" timestamp="1601969360654" />
+    <state x="379" y="26" width="840" height="1034" key="search.everywhere.popup" timestamp="1600581805965">
+      <screen x="0" y="27" width="1600" height="805" />
+    </state>
+    <state x="379" y="26" width="840" height="1034" key="search.everywhere.popup/0.27.1600.805@0.27.1600.805" timestamp="1600581805965" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/nilva1$test.coverage" NAME="test Coverage Results" MODIFIED="1601898431761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
