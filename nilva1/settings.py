@@ -118,13 +118,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# JWT_AUTH = {
-#     'JWT_VERIFY': True,
-#     'JWT_VERIFY_EXPIRATION': True,
-#     'JWT_EXPIRATION_DELTA': timedelta(seconds=3000),
-#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-# }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),

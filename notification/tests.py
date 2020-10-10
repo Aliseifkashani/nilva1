@@ -1,25 +1,21 @@
 import requests
 from django.test import TestCase
-import unittest
-from unittest.mock import patch
 
 from . import views
 
 
-class TestJWTAuthentication(unittest.TestCase):
+class TestJWTAuthentication(TestCase):
 
     def test_api_token(self):
-        pass
+        url = 'http://127.0.0.1:8000/api/token/'
+        data = {
+            'username': 'mohammadali',
+            'password': 'ali25202520'
+        }
+        result = requests.post(url, data)
+        response_dict = eval(result.text)
+        self.assertContains(response_dict, 'token')
 
 
-class TestNotifications(unittest.TestCase):
-
-    def test_get(self):
-        url = 'http://127.0.0.1:8000/get/'
-        result = requests.get(url)
-
-
-# Create your tests here.
-
-if __name__ == '__main__':
-    unittest.main()
+class TestNotifications(TestCase):
+    pass

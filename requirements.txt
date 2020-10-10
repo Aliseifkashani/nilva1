@@ -5,3 +5,5 @@ kavenegar~=1.1.2
 requests~=2.22.0
 google-auth-oauthlib~=0.4.1
 google-api-python-client~=1.12.3
+psycopg2~=2.8.6
+djangorestframework-simplejwt~=4.4.0
