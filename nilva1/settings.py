@@ -21,6 +21,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'notification',
+    # 'celery',
+    # 'django_celery_results',
+    'django_celery_beat',
     'user',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -145,13 +148,14 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'nilva.info@gmail.com'
 EMAIL_HOST_PASSWORD = 'xiidjxfvujhsvbxm'
 
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'django-cache'
+# result_backend = 'django-db'
+cache_backend = 'django-cache'
 
 AUTH_USER_MODEL = 'user.User'

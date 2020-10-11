@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
 
-from nilva1.celery import app
+from nilva1.celery_app import app
 from user.models import User
 
 
@@ -54,7 +54,7 @@ def add_notif_task(serializer):
     resume_task.apply_async(
         args=('notif',),
         kwargs={'notif': notif},
-        countdown=timedelta(notif.interval)
+        countdown=timedelta(hours=notif.interval)
     )
 
 
@@ -68,25 +68,25 @@ def resume_task(serializer):
                 task = email_notif.apply_async(
                     args=('notif',),
                     kwargs={'notif': notif},
-                    countdown=timedelta(notif.interval)
+                    countdown=timedelta(hours=notif.interval)
                 )
             elif notif_type.lower() == 'sms':
                 task = SMS_notif.apply_async(
                     args=('notif',),
                     kwargs={'notif': notif},
-                    countdown=timedelta(notif.interval)
+                    countdown=timedelta(hours=notif.interval)
                 )
             elif notif_type.lower() == 'telegram_message':
                 task = telegram_notif.apply_async(
                     args=('notif',),
                     kwargs={'notif': notif},
-                    countdown=timedelta(notif.interval)
+                    countdown=timedelta(hours=notif.interval)
                 )
             elif notif_type.lower() == 'firebase_message':
                 task = firebase_notif.apply_async(
                     args=('notif',),
                     kwargs={'notif': notif},
-                    countdown=timedelta(notif.interval)
+                    countdown=timedelta(hours=notif.interval)
                 )
         notif.task_id = task.id
     else:
@@ -100,7 +100,7 @@ def resume_task(serializer):
     resume_task.apply_async(
         args=('notif',),
         kwargs={'notif': notif},
-        countdown=timedelta(notif.interval)
+        countdown=timedelta(hours=notif.interval)
     )
 
 
@@ -176,3 +176,8 @@ def firebase_notif(notif):
 @app.task
 def google_calendar_notif(notif):
     pass
+
+
+@app.task
+def hello_test(self, notif):
+    print(f'hello {notif}')

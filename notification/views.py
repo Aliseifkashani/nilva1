@@ -1,9 +1,10 @@
 import ast
 # import jwt
 from django.contrib.auth import user_logged_in
-from django.http import HttpResponse
-# from .models import User as Main_User
-from django.contrib.auth.models import User
+from django.core import mail
+from django.http import HttpResponse, JsonResponse
+from django.template.loader import render_to_string
+from kavenegar import KavenegarAPI, APIException, HTTPException
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView, RetrieveAPIView, DestroyAPIView
@@ -18,12 +19,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 import io
 from rest_framework.parsers import JSONParser
+from django.core.mail import EmailMessage, send_mail
 
 from nilva1.settings import SECRET_KEY
 from notification.serializers import NotificationSerializer
 from user.serializers import UserSerializer
 from .models import Notification
 from . import tasks
+from user.models import User
 
 
 # def authorization(request):
@@ -152,13 +155,13 @@ class DeleteNotificationAPI(DestroyAPIView):
 #         editing_notif.notification_types = body['notification_types']
 #
 #     editing_notif.save()
-#     # beat_schedule.update({
-#     #     'send_email_id={editing_notif.id}': {
-#     #         'task': 'notification.tasks.email_notif',
-#     #         'schedule': crontab(),
-#     #         'args': editing_notif
-#     #     }
-#     # })
+#     beat_schedule.update({
+#         'send_email_id={editing_notif.id}': {
+#             'task': 'notification.tasks.email_notif',
+#             'schedule': crontab(),
+#             'args': editing_notif
+#         }
+#     })
 #     return HttpResponse('Successful Operation')
 
 #
