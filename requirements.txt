@@ -8,3 +8,5 @@ google-api-python-client~=1.12.3
 psycopg2~=2.8.6
 djangorestframework-simplejwt~=4.4.0
 django-celery-beat~=2.0.0
+google-api-python-client~=1.12.3
+dj-config-url~=0.1.1

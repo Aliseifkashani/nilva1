@@ -1,92 +1,90 @@
-from datetime import timedelta
 from celery.worker.control import revoke
 from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
 
 from nilva1.celery_app import app
+from notification.serializers import NotificationSerializer
 from user.models import User
+
+SECONDS_OF_HOUR = 3600
 
 
 @app.task
 def add_notif_task(serializer):
     notif = serializer.instance
+    notif_types = notif.notification_types.split(', ')
+
     global task
-    for notif_type in notif.notification_types:
+    for notif_type in notif_types:
         if notif_type.lower() == 'email':
             task = email_notif.apply_async(
-                args=('notif',),
-                kwargs={'notif': notif},
+                kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
         elif notif_type.lower() == 'sms':
             task = SMS_notif.apply_async(
-                args=('notif',),
-                kwargs={'notif': notif},
+                kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
         elif notif_type.lower() == 'telegram_message':
             task = telegram_notif.apply_async(
-                args=('notif',),
-                kwargs={'notif': notif},
+                kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
         elif notif_type.lower() == 'firebase_message':
             task = firebase_notif.apply_async(
-                args=('notif',),
-                kwargs={'notif': notif},
+                kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
         # elif notif_type.lower() == 'google_calendar':
-        #     task = firebase_notif.apply_async(
-        #         args=('notif',),
-        #         kwargs={'notif': notif},
+        #     task = calendar.apply_async(
+        #         kwargs={'data': notif},
         #         eta=notif.time_to_send
         #     )
 
     notif.task_id = task.id
-
     if notif.repeat > 0:
         notif.repeat -= 1
-
     notif.save()
-    serializer.save()
-    resume_task.apply_async(
-        args=('notif',),
-        kwargs={'notif': notif},
-        countdown=timedelta(hours=notif.interval)
-    )
+    # serializer.save()
+    countdown = notif.interval * SECONDS_OF_HOUR
+    # resume_task.apply_async(
+    #     kwargs={'data': serializer.data},
+    #     countdown=countdown
+    # )
 
 
 @app.task
-def resume_task(serializer):
+def resume_task(data):
+    serializer = NotificationSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
     notif = serializer.instance
+    notif_types = notif.notification_types.split(', ')
+
     global task
     if notif.repeat > 0 or notif.repeat == -1:
-        for notif_type in notif.notification_types:
+        for notif_type in notif_types:
             if notif_type.lower() == 'email':
                 task = email_notif.apply_async(
-                    args=('notif',),
-                    kwargs={'notif': notif},
-                    countdown=timedelta(hours=notif.interval)
+                    kwargs={'data': serializer.data},
+                    countdown=notif.interval * SECONDS_OF_HOUR
                 )
             elif notif_type.lower() == 'sms':
                 task = SMS_notif.apply_async(
-                    args=('notif',),
-                    kwargs={'notif': notif},
-                    countdown=timedelta(hours=notif.interval)
+                    kwargs={'data': serializer.data},
+                    countdown=notif.interval * SECONDS_OF_HOUR
                 )
             elif notif_type.lower() == 'telegram_message':
                 task = telegram_notif.apply_async(
-                    args=('notif',),
-                    kwargs={'notif': notif},
-                    countdown=timedelta(hours=notif.interval)
+                    kwargs={'data': serializer.data},
+                    countdown=notif.interval * SECONDS_OF_HOUR
                 )
             elif notif_type.lower() == 'firebase_message':
                 task = firebase_notif.apply_async(
-                    args=('notif',),
-                    kwargs={'notif': notif},
-                    countdown=timedelta(hours=notif.interval)
+                    kwargs={'data': serializer.data},
+                    countdown=notif.interval * SECONDS_OF_HOUR
                 )
         notif.task_id = task.id
     else:
@@ -96,30 +94,33 @@ def resume_task(serializer):
         notif.repeat -= 1
 
     notif.save()
-    serializer.save()
+    # serializer.save()
     resume_task.apply_async(
-        args=('notif',),
-        kwargs={'notif': notif},
-        countdown=timedelta(hours=notif.interval)
+        kwargs={'data': serializer.data},
+        countdown=notif.interval# * SECONDS_OF_HOUR
     )
 
 
 @app.task
 def edit_notif_task(serializer):
     notif = serializer.instance
-    revoke(task_id=notif.task_id, terminate=True)
-    add_notif_task(notif)
+    revoke(task_id=notif.task_id, terminate=True, state=200)
+    add_notif_task(serializer)
 
 
 @app.task
 def delete_notif(serializer):
     notif = serializer.instance
     notif.repeat = -2
-    revoke(task_id=notif.task_id, terminate=True)
+    notif.save()
+    revoke(task_id=notif.task_id, terminate=True, state=200)
 
 
 @app.task
-def email_notif(notif):
+def email_notif(data):
+    serializer = NotificationSerializer(data)
+    notif = serializer.instance
+
     for staff in notif.relevant_staff:
         user = User.objects.get(username=staff)
         context = {
@@ -140,18 +141,27 @@ def email_notif(notif):
 
 
 @app.task
-def SMS_notif(notif):
+def SMS_notif(data):
+    serializer = NotificationSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+    notif = serializer.instance
+    relevant_staff = notif.relevant_staff.split(', ')
+
     try:
         api = KavenegarAPI(
             '51474735396C536947576930554D724332327075506E78667532482B58462B71672B5A7148554E753939733D',
         )
-        params = {
-            # 'sender': '1000596446',# optional
-            'receptor': notif.relevant_staff,  # multiple mobile number, split by comma
-            'message': notif.title + '\n\n' + notif.description + '\n\n' + 'Nilva team',
-        }
-        response = api.sms_send(params)
-        print(response)
+        for staff_username in relevant_staff:
+            # username = staff_username[0]  # It is because of relevant_staff (and also notification_types) has changed
+            # to a list object in last functions
+            params = {
+                # 'sender': '1000596446',  # optional
+                'receptor': User.objects.get(username=staff_username).phone,  # multiple mobile number, split by comma
+                'message': notif.title + '\n\n' + notif.description + '\n\n' + 'Nilva team',
+            }
+            response = api.sms_send(params)
+            print(response)
     except APIException as e:
         print(e)
     except HTTPException as e:
@@ -159,7 +169,7 @@ def SMS_notif(notif):
 
 
 @app.task
-def telegram_notif(notif):
+def telegram_notif(data):
     pass
     # TOKEN = '1254140072:AAEpWrOpCmQM4DZ-RIO00i1tcK5QslbKU6Q'
     # bot = TeleBot(TOKEN)
@@ -169,15 +179,26 @@ def telegram_notif(notif):
 
 
 @app.task
-def firebase_notif(notif):
+def firebase_notif(data):
     pass
 
 
 @app.task
-def google_calendar_notif(notif):
+def google_calendar_notif(data):
     pass
 
 
 @app.task
-def hello_test(self, notif):
-    print(f'hello {notif}')
+def hello_test(data):
+    print(data)
+
+# task = hello_test.apply_async(
+#     kwargs={'data': 'notif'},
+#     countdown=2
+# )
+
+# task2 = hello_test.apply_async(
+#     kwargs={'data': str(task.__dict__)},
+#     countdown=4
+# )
+# revoke(task_id=task.id, terminate=True, state=200)
