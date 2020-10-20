@@ -49,10 +49,10 @@ def add_notif_task(serializer):
     notif.save()
     # serializer.save()
     countdown = notif.interval * SECONDS_OF_HOUR
-    # resume_task.apply_async(
-    #     kwargs={'data': serializer.data},
-    #     countdown=countdown
-    # )
+    resume_task.apply_async(
+        kwargs={'data': serializer.data},
+        countdown=countdown
+    )
 
 
 @app.task

@@ -9,8 +9,8 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         notif = Notification.objects.create(**validated_data)
-        notif.relevant_staff = notif.relevant_staff
-        notif.notification_types = notif.notification_types
+        # notif.relevant_staff = notif.relevant_staff
+        # notif.notification_types = notif.notification_types
         notif.save()
         return notif
 

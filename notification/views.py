@@ -33,7 +33,7 @@ class EditNotificationAPI(RetrieveUpdateAPIView):
     queryset = Notification.objects.all()
 
     def patch(self, request, *args, **kwargs):
-        id = request.data.pop('id')
+        id = request.data['id']
         notif = Notification.objects.get(id=id)
         serializer = NotificationSerializer(notif, data=request.data)
 

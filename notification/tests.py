@@ -21,21 +21,19 @@ class TestJWTAuthentication(TestCase):
 
     def test_api_token(self):
         url = 'http://127.0.0.1:8000/api/token/'
-        user = User.objects.get(username='mohammadali')
-        data = {
-            'username': user.username,
-            'password': user.password
-        }
-        result = requests.post(url, data)
-        response_dict = eval(result.text)
-        self.assertTrue('access' in response_dict)
+        self.user = User.objects.create(username='a', password='a')
+        self.user.save()
+        result = requests.post(url, {'username': self.user.username, 'password': 'a'}).json()
+        self.assertTrue('access' in result)
 
 
 class TestSendNotifications(TestCase):
-    # global user
-    user = User.objects.get(username='mohammadali')
-
     # these 2 first tests need VPN for connecting
+    def setUp(self):
+        self.user = User.objects.create(username='a', password='a', email='seifkashani14@gmail.com', phone='09019153618',
+                                   first_name='mohammadali', last_name='seifkashani')
+        self.user.save()
+
     def test_validate_email_correct_address(self):
         pass
         # email_address = "nilva.info@gmail.com"
@@ -60,8 +58,8 @@ class TestSendNotifications(TestCase):
     # we can't send email from tests
     def test_send_email_to_one_person(self):
         context = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
             'title': 'notif.title',
             'description': 'notif.description'
         }
@@ -71,7 +69,7 @@ class TestSendNotifications(TestCase):
                 'notif.title',
                 'notif.content',
                 'nilva.info@gmail.com',
-                ['seifkashani14@gmail.com', user.email],  # just one email to one person
+                ['seifkashani14@gmail.com', self.user.email],  # just one email to one person
                 html_message=html_message,
                 fail_silently=False
             )
@@ -81,8 +79,8 @@ class TestSendNotifications(TestCase):
 
     def test_send_email_to_multiple_people(self):
         context = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
             'title': 'notif.title',
             'description': 'notif.description'
         }
@@ -92,7 +90,7 @@ class TestSendNotifications(TestCase):
                 'notif.title',
                 'notif.content',
                 'nilva.info@gmail.com',
-                [user.email, 'hasanzadeh@nilva.ir'],
+                [self.user.email, 'hasanzadeh@nilva.ir'],
                 html_message=html_message,
                 fail_silently=False
             )
@@ -101,20 +99,19 @@ class TestSendNotifications(TestCase):
             self.assertFalse(True)
 
     def test_send_sms_to_one_person(self):
-        pass
         try:
             api = KavenegarAPI(
                 '51474735396C536947576930554D724332327075506E78667532482B58462B71672B5A7148554E753939733D',
             )
             params = {
                 # 'sender': '1000596446',  # optional
-                'receptor': '09019153618',  # multiple mobile number, split by comma
+                'receptor': self.user.phone,  # multiple mobile number, split by comma
                 'message': 'notif.title' + '\n\n' + 'notif.description' + '\n\n' + 'Nilva team',
             }
             response = api.sms_send(params)
-            # print(response)
+            print(response)
         except APIException as e:
-            print(e)
+            print(e)  # for example running out of balance
         except HTTPException as e:
             print(e)
 
@@ -262,7 +259,7 @@ class TestNotificationOperationsViews(TestCase):
             "task_id": ""
         }
         response = self.client.post(reverse('add_notification'), data=context)
-        print(response.content)
+        # print(response.content)
         dict_str = response.content.decode("UTF-8")
         mydata = ast.literal_eval(dict_str)
         context = {
