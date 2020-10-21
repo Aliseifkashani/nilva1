@@ -61,7 +61,8 @@ class TestSendNotifications(TestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'title': 'notif.title',
-            'description': 'notif.description'
+            'description': 'notif.description',
+            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         try:
@@ -82,7 +83,8 @@ class TestSendNotifications(TestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'title': 'notif.title',
-            'description': 'notif.description'
+            'description': 'notif.description',
+            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         try:
@@ -145,7 +147,7 @@ class TestSchedularNotification(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": datetime.now(),
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": datetime.now()-timedelta(minutes=210)+timedelta(seconds=1),  # timezone of celery is utc
             # for now
             "notification_types": "sms",
@@ -198,7 +200,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
@@ -217,7 +219,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
@@ -231,7 +233,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
@@ -251,7 +253,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
@@ -269,7 +271,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
@@ -288,7 +290,7 @@ class TestNotificationOperationsViews(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": "2020-10-04 12:30",
-            "buffer_time": "2020-10-04 12:30",
+            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,

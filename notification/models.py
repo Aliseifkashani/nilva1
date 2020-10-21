@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-# from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
@@ -14,8 +13,8 @@ class Notification(models.Model):
         help_text='separating with \', \'',
         default=''
     )
-    time_created = models.DateTimeField(default=now)
-    buffer_time = models.DateTimeField(default=now)
+    time_created = now
+    due_date = models.DateTimeField(default=now)
     time_to_send = models.DateTimeField(default=now)
     notification_types = models.CharField(
         max_length=100,
