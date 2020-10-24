@@ -25,4 +25,4 @@ def test_send_email_to_multiple_people(request):
 
 
 def educational(request):
-    return HttpResponse(User.objects.get(username='a').password)
+    return HttpResponse(User.objects.get(username='ali').password)
