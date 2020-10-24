@@ -1,4 +1,3 @@
-from celery.worker.control import revoke
 from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
@@ -15,6 +14,7 @@ def add_notif_task(serializer):
     notif = serializer.instance
     notif_types = notif.notification_types.split(', ')
 
+    # apply_async function needs json serializable data in kwargs. serializer itself isn't json serializable.
     global task
     for notif_type in notif_types:
         if notif_type.lower() == 'email':
@@ -37,30 +37,33 @@ def add_notif_task(serializer):
                 kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
-        # elif notif_type.lower() == 'google_calendar':
-        #     task = calendar.apply_async(
-        #         kwargs={'data': notif},
-        #         eta=notif.time_to_send
-        #     )
+        elif notif_type.lower() == 'google_calendar':
+            task = google_calendar_notif.apply_async(
+                kwargs={'data': notif},
+                eta=notif.time_to_send
+            )
 
     notif.task_id = task.id
     if notif.repeat > 0:
         notif.repeat -= 1
     notif.save()
-    # serializer.save()
-    countdown = notif.interval * SECONDS_OF_HOUR
+    serializer = NotificationSerializer(notif)  # we need it for resume_task.apply_async
+
     resume_task.apply_async(
         kwargs={'data': serializer.data},
-        countdown=countdown
+        countdown=notif.interval * SECONDS_OF_HOUR
     )
 
 
+# We needed another function for implementing resuming tasks because we couldn't call add_notif_task.apply_async in
+# itself. Also we couldn't have add_notif_task with specific repetition with custom interval.
 @app.task
 def resume_task(data):
     serializer = NotificationSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
     notif = serializer.instance
+    # notif.notification_types is a string like 'email, sms, telegram bot'
     notif_types = notif.notification_types.split(', ')
 
     global task
@@ -86,6 +89,12 @@ def resume_task(data):
                     kwargs={'data': serializer.data},
                     countdown=notif.interval * SECONDS_OF_HOUR
                 )
+            elif notif_type.lower() == 'google_calendar':
+                task = google_calendar_notif.apply_async(
+                    kwargs={'data': notif},
+                    eta=notif.time_to_send
+                )
+
         notif.task_id = task.id
     else:
         return
@@ -94,34 +103,39 @@ def resume_task(data):
         notif.repeat -= 1
 
     notif.save()
-    # serializer.save()
+    serializer = NotificationSerializer(notif)  # we need it for resume_task.apply_async
+
     resume_task.apply_async(
         kwargs={'data': serializer.data},
-        countdown=notif.interval# * SECONDS_OF_HOUR
+        countdown=notif.interval * SECONDS_OF_HOUR
     )
 
 
 @app.task
 def edit_notif_task(serializer):
+    # straight task update isn't implemented in celery
     notif = serializer.instance
-    revoke(task_id=notif.task_id, terminate=True, state=200)
+    app.control.revoke(task_id=notif.task_id, terminate=True)
     add_notif_task(serializer)
 
 
 @app.task
-def delete_notif(serializer):
+def delete_notif_task(serializer):
     notif = serializer.instance
     notif.repeat = -2
     notif.save()
-    revoke(task_id=notif.task_id, terminate=True, state=200)
+    app.control.revoke(task_id=notif.task_id, terminate=True)
 
 
 @app.task
 def email_notif(data):
-    serializer = NotificationSerializer(data)
+    serializer = NotificationSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
     notif = serializer.instance
 
-    for staff in notif.relevant_staff:
+    relevant_staff = notif.relevant_staff.split(', ')
+    for staff in relevant_staff:
         user = User.objects.get(username=staff)
         context = {
             'first_name': user.first_name,
@@ -132,7 +146,7 @@ def email_notif(data):
         html_message = render_to_string('mail_template.html', context=context)
         send_mail(
             notif.title,
-            notif.content,
+            notif.description,
             'nilva.info@gmail.com',
             [user.email],
             html_message=html_message,
@@ -171,23 +185,21 @@ def SMS_notif(data):
 @app.task
 def telegram_notif(data):
     pass
-    # TOKEN = '1254140072:AAEpWrOpCmQM4DZ-RIO00i1tcK5QslbKU6Q'
-    # bot = TeleBot(TOKEN)
-    #
-    # for user in notif.relevant_staff:
-    #     bot.send_message(user.chat_id, notif.title + '\n\n' + notif.description)
+    # need for requesting to telegram bot service for send_notif
 
 
 @app.task
 def firebase_notif(data):
     pass
+    # should be implemented in another process
 
 
 @app.task
 def google_calendar_notif(data):
     pass
+    # should be implemented in another process
 
-
+# testing:
 @app.task
 def hello_test(data):
     print(data)
@@ -196,9 +208,3 @@ def hello_test(data):
 #     kwargs={'data': 'notif'},
 #     countdown=2
 # )
-
-# task2 = hello_test.apply_async(
-#     kwargs={'data': str(task.__dict__)},
-#     countdown=4
-# )
-# revoke(task_id=task.id, terminate=True, state=200)

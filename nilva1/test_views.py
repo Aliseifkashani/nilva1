@@ -1,9 +1,6 @@
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
 
 from user.models import User
 
@@ -20,7 +17,7 @@ def test_send_email_to_multiple_people(request):
         'notif.title',
         'notif.content',
         'nilva.info@gmail.com',
-        ['seifkashani14@gmail.com', 'hasanzadeh@nilva.ir'],
+        ['seifkashani14@gmail.com', ''],
         html_message=html_message,
         fail_silently=False
     )

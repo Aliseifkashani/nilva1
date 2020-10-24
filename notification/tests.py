@@ -1,6 +1,3 @@
-import ast , subprocess
-import os
-
 import requests
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -9,12 +6,15 @@ from django.urls import reverse
 from kavenegar import KavenegarAPI, APIException, HTTPException
 from datetime import datetime, timedelta
 from rest_framework.test import APIClient
-from celery.worker.control import revoke
 
+from nilva1.celery_app import app
 from .serializers import NotificationSerializer
 from .tasks import hello_test
 from user.models import User
 from .tasks import add_notif_task
+
+
+# Be careful about all tests that their database is compeletely separate from project main database.
 
 
 class TestJWTAuthentication(TestCase):
@@ -28,12 +28,12 @@ class TestJWTAuthentication(TestCase):
 
 
 class TestSendNotifications(TestCase):
-    # these 2 first tests need VPN for connecting
     def setUp(self):
         self.user = User.objects.create(username='a', password='a', email='seifkashani14@gmail.com', phone='09019153618',
                                    first_name='mohammadali', last_name='seifkashani')
         self.user.save()
 
+    # These 2 first tests need VPN for connecting.
     def test_validate_email_correct_address(self):
         pass
         # email_address = "nilva.info@gmail.com"
@@ -54,8 +54,8 @@ class TestSendNotifications(TestCase):
         # status = response.json()['status']
         # self.assertEqual(status, 'invalid')
 
-    # these 2 tests do nothing and just pass
-    # we can't send email from tests
+    # These 2 tests do nothing and just pass.
+    # We can't send email from tests.
     def test_send_email_to_one_person(self):
         context = {
             'first_name': self.user.first_name,
@@ -70,7 +70,7 @@ class TestSendNotifications(TestCase):
                 'notif.title',
                 'notif.content',
                 'nilva.info@gmail.com',
-                ['seifkashani14@gmail.com', self.user.email],  # just one email to one person
+                ['seifkashani14@gmail.com', self.user.email],  # just one email to one person because both are equal
                 html_message=html_message,
                 fail_silently=False
             )
@@ -122,12 +122,11 @@ class TestSendNotifications(TestCase):
 
 
 class TestSchedularNotification(TestCase):
-    # in a terminal window run "celery -A nilva1 beat -l INFO"
-    # in another terminal window run "celery -A nilva1 worker -l INFO"
-    # then run tests
+    # In a terminal window run "celery -A nilva1 beat -l INFO" .
+    # In another terminal window run "celery -A nilva1 worker -l INFO" .
+    # Then run tests.
 
     # for now you need to check visually
-
     def test_specific_time(self):
         hello_test.apply_async(
             kwargs={'data': 'task with specific time'},
@@ -148,8 +147,7 @@ class TestSchedularNotification(TestCase):
             "relevant_staff": "mohammadali",
             "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
-            "time_to_send": datetime.now()-timedelta(minutes=210)+timedelta(seconds=1),  # timezone of celery is utc
-            # for now
+            "time_to_send": datetime.now()+timedelta(seconds=1),
             "notification_types": "sms",
             "repeat": 2,
             "interval": 1,
@@ -161,17 +159,17 @@ class TestSchedularNotification(TestCase):
         add_notif_task(serializer)
         # os.system('celery -A nilva1 worker -l INFO')
         # subprocess.call('python manage.py test notification.tests.TestSchedularNotification.test_repeat_interval')
-        serializer.instance.delete()
+        # serializer.instance.delete()
 
     def test_edit_task(self):
         task = hello_test.apply_async(
             kwargs={'data': 'editing task'},
             countdown=10
         )
-        revoke(task_id=task.id, terminate=True, state=200)
+        app.control.revoke(task_id=task.id, terminate=True)
         hello_test.apply_async(
             kwargs={'data': 'edited task'},
-            countdown=3
+            countdown=5
         )
 
     def test_delete_task(self):
@@ -179,7 +177,7 @@ class TestSchedularNotification(TestCase):
             kwargs={'data': 'deleting task'},
             countdown=3
         )
-        revoke(task_id=task.id, terminate=True, state=200)
+        app.control.revoke(task_id=task.id, terminate=True)
 
 
 class TestNotificationOperationsViews(TestCase):
@@ -199,7 +197,7 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -207,10 +205,8 @@ class TestNotificationOperationsViews(TestCase):
             "interval": 24,
             "task_id": ""
         }
-        response = self.client.post(reverse('add_notification'), data=context)
-        dict_str = response.content.decode("UTF-8")
-        mydata = ast.literal_eval(dict_str)
-        self.assertTrue('id' in mydata)
+        response = self.client.post(reverse('add_notification'), data=context).json()
+        self.assertTrue('id' in response)
 
     def test_get_notifications(self):
         context = {
@@ -218,7 +214,7 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -232,7 +228,7 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -242,7 +238,9 @@ class TestNotificationOperationsViews(TestCase):
         }
         self.client.post(reverse('add_notification'), data=context)
         response = self.client.get(reverse('get_notification'))
-        # print(response.content)
+        # print(response.data)
+
+        # response.data is a list of two OrderedDict objects
         self.assertTrue('id' in list(response.data[0].items())[0])
         self.assertTrue('id' in list(response.data[1].items())[0])
 
@@ -252,7 +250,7 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -260,17 +258,16 @@ class TestNotificationOperationsViews(TestCase):
             "interval": 24,
             "task_id": ""
         }
-        response = self.client.post(reverse('add_notification'), data=context)
+        response = self.client.post(reverse('add_notification'), data=context).json()
         # print(response.content)
-        dict_str = response.content.decode("UTF-8")
-        mydata = ast.literal_eval(dict_str)
+
         context = {
-            "id": mydata['id'],
+            "id": response['id'],
             "title": "test_edit_after",
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -278,10 +275,8 @@ class TestNotificationOperationsViews(TestCase):
             "interval": 24,
             "task_id": ""
         }
-        response = self.client.patch(reverse('edit_notification'), data=context)
-        dict_str = response.content.decode("UTF-8")
-        mydata = ast.literal_eval(dict_str)
-        self.assertEqual(mydata['title'], 'test_edit_after')
+        response = self.client.patch(reverse('edit_notification'), data=context).json()
+        self.assertEqual(response['title'], 'test_edit_after')
 
     def test_delete_notification(self):
         context = {
@@ -289,7 +284,7 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "time_created": "2020-10-04 12:30",
+            "time_created": datetime.now(),
             "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
@@ -297,12 +292,10 @@ class TestNotificationOperationsViews(TestCase):
             "interval": 24,
             "task_id": ""
         }
-        response = self.client.post(reverse('add_notification'), data=context)
-        dict_str = response.content.decode("UTF-8")
-        mydata = ast.literal_eval(dict_str)
-        response = self.client.delete(reverse('delete_notification'), data={'id': mydata['id']})
-        dict_str = response.content.decode("UTF-8")
-        self.assertTrue('null' in dict_str)
+        response = self.client.post(reverse('add_notification'), data=context).json()
+        response = self.client.delete(reverse('delete_notification'), data={'id': response['id']}).json()
+        # print(response)
+        self.assertEqual(response['id'], None)
 
 
 class TestCalendarScheduling(TestCase):

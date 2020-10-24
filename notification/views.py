@@ -19,12 +19,12 @@ class AddNotificationAPI(ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = NotificationSerializer(data=request.data)
-
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         serializer.save()
+
         tasks.add_notif_task(serializer)
+
         return JsonResponse(serializer.data)
 
 
@@ -36,12 +36,12 @@ class EditNotificationAPI(RetrieveUpdateAPIView):
         id = request.data['id']
         notif = Notification.objects.get(id=id)
         serializer = NotificationSerializer(notif, data=request.data)
-
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         serializer.save()
+
         tasks.edit_notif_task(serializer)
+
         return JsonResponse(serializer.data)
 
 
@@ -53,9 +53,10 @@ class DeleteNotificationAPI(DestroyAPIView):
         if not 'id' in request.data or (
                 'id' in request.data and not Notification.objects.filter(id=request.data['id'])):
             return Response("id field isn't provided or invalid id", status=status.HTTP_400_BAD_REQUEST)
-
         notif = Notification.objects.get(id=request.data['id'])
         serializer = NotificationSerializer(notif)
-        tasks.delete_notif(serializer)
+
+        tasks.delete_notif_task(serializer)
         notif.delete()
+
         return JsonResponse(NotificationSerializer(notif).data, safe=False)

@@ -46,7 +46,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'date_joined', 'is_active', 'is_staff')
+        fields = ('email', 'password', 'is_active', 'is_staff')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -79,7 +79,7 @@ class UserAdmin(BaseUserAdmin):
             'classes': ('wide',),
             'fields': (
                 'username', 'email', 'phone', 'first_name', 'last_name', 'is_staff',
-                'is_active', 'date_joined', 'password1', 'password2',
+                'is_active', 'password1', 'password2',
             ),
         }),
     )
@@ -93,24 +93,3 @@ admin.site.register(User, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
-
-# from .forms import CustomUserCreationForm, CustomUserChangeForm
-# from django.contrib.auth.admin import UserAdmin
-# class CustomUserAdmin(UserAdmin):
-#     add_form = CustomUserCreationForm
-#     form = CustomUserChangeForm
-#     model = User
-#     list_display = ('username', 'is_staff', 'is_active',)
-#     list_filter = ('username', 'is_staff', 'is_active',)
-#     fieldsets = (
-#         (None, {'fields': ('username', 'password')}),
-#         ('Permissions', {'fields': ('is_staff', 'is_active')}),
-#     )
-#     add_fieldsets = (
-#         (None, {
-#             'classes': ('wide',),
-#             'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
-#         ),
-#     )
-#     search_fields = ('username',)
-#     ordering = ('username',)

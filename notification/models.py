@@ -8,16 +8,12 @@ class Notification(models.Model):
     title = models.CharField(max_length=30)
     description = models.TextField()
     creator = models.CharField(max_length=100, default='')
-    relevant_staff = models.CharField(
-        max_length=200,
-        help_text='separating with \', \'',
-        default=''
-    )
+    relevant_staff = models.CharField(max_length=200, help_text='separating with \', \'', default='')
     time_created = now
     due_date = models.DateTimeField(default=now)
     time_to_send = models.DateTimeField(default=now)
     notification_types = models.CharField(
-        max_length=100,
+        max_length=70,
         default='email, sms, telegram bot, firebase',
         help_text='separating with \', \''
     )

@@ -7,6 +7,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = '__all__'
 
+    # if we have other irrelevant data in our request's body, it ignores it and acts well
     def create(self, validated_data):
         return Notification.objects.create(**validated_data)
 
