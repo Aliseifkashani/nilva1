@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
@@ -141,7 +143,8 @@ def email_notif(data):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'title': notif.title,
-            'description': notif.description
+            'description': notif.description,
+            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         send_mail(
@@ -167,8 +170,6 @@ def SMS_notif(data):
             '51474735396C536947576930554D724332327075506E78667532482B58462B71672B5A7148554E753939733D',
         )
         for staff_username in relevant_staff:
-            # username = staff_username[0]  # It is because of relevant_staff (and also notification_types) has changed
-            # to a list object in last functions
             params = {
                 # 'sender': '1000596446',  # optional
                 'receptor': User.objects.get(username=staff_username).phone,  # multiple mobile number, split by comma
@@ -198,6 +199,7 @@ def firebase_notif(data):
 def google_calendar_notif(data):
     pass
     # should be implemented in another process
+
 
 # testing:
 @app.task

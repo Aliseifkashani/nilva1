@@ -9,11 +9,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     # if we have other irrelevant data in our request's body, it ignores it and acts well
     def create(self, validated_data):
-        notif = Notification.objects.create(**validated_data)
-        # notif.relevant_staff = notif.relevant_staff
-        # notif.notification_types = notif.notification_types
-        notif.save()
-        return notif
+        return Notification.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
@@ -21,7 +17,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         instance.creator = validated_data.get('creator', instance.creator)
         instance.relevant_staff = validated_data.get('relevant_staff', instance.relevant_staff)
         instance.time_created = validated_data.get('time_created', instance.time_created)
-        instance.buffer_time = validated_data.get('buffer_time', instance.buffer_time)
+        instance.due_date = validated_data.get('due_date', instance.due_date)
         instance.time_to_send = validated_data.get('time_to_send', instance.time_to_send)
         instance.notification_types = validated_data.get('notification_types', instance.notification_types)
         instance.repeat = validated_data.get('repeat', instance.repeat)
