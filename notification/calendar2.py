@@ -34,11 +34,11 @@ def add():
         # 'location': '800 Howard St., San Francisco, CA 94103',
         'description': notif.description,
         'start': {
-            'dateTime': notif.time_to_send.strftime('%Y-%m-%dT %H:%M:%S'),
+            'dateTime': notif.time_to_send.strftime('%Y-%m-%d %H:%M:%S'),
             'timeZone': 'Asia/Tehran',
         },
         'end': {
-            'dateTime': (notif.time_to_send + timedelta(minutes=30)).strftime('%Y-%m-%dT %H:%M:%S'),
+            'dateTime': (notif.time_to_send + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S'),
             'timeZone': 'Asia/Tehran',
         },
         'recurrence': [

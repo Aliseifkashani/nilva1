@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
@@ -51,10 +50,13 @@ def add_notif_task(serializer):
     notif.save()
     serializer = NotificationSerializer(notif)  # we need it for resume_task.apply_async
 
-    resume_task.apply_async(
-        kwargs={'data': serializer.data},
-        countdown=notif.interval * SECONDS_OF_HOUR
-    )
+    if notif.repeat > 0 or notif.repeat == -1:
+        task = resume_task.apply_async(
+            kwargs={'data': serializer.data},
+            eta=notif.time_to_send + timedelta(hours=notif.interval)
+        )
+        notif.task_id += ', ' + task.id
+        notif.save()
 
 
 # We needed another function for implementing resuming tasks because we couldn't call add_notif_task.apply_async in
@@ -68,65 +70,49 @@ def resume_task(data):
     # notif.notification_types is a string like 'email, sms, telegram bot'
     notif_types = notif.notification_types.split(', ')
 
-    global task
-    if notif.repeat > 0 or notif.repeat == -1:
-        for notif_type in notif_types:
-            if notif_type.lower() == 'email':
-                task = email_notif.apply_async(
-                    kwargs={'data': serializer.data},
-                    countdown=notif.interval * SECONDS_OF_HOUR
-                )
-            elif notif_type.lower() == 'sms':
-                task = SMS_notif.apply_async(
-                    kwargs={'data': serializer.data},
-                    countdown=notif.interval * SECONDS_OF_HOUR
-                )
-            elif notif_type.lower() == 'telegram_message':
-                task = telegram_notif.apply_async(
-                    kwargs={'data': serializer.data},
-                    countdown=notif.interval * SECONDS_OF_HOUR
-                )
-            elif notif_type.lower() == 'firebase_message':
-                task = firebase_notif.apply_async(
-                    kwargs={'data': serializer.data},
-                    countdown=notif.interval * SECONDS_OF_HOUR
-                )
-            elif notif_type.lower() == 'google_calendar':
-                task = google_calendar_notif.apply_async(
-                    kwargs={'data': notif},
-                    eta=notif.time_to_send
-                )
-
-        notif.task_id = task.id
-    else:
-        return
+    for notif_type in notif_types:
+        if notif_type.lower() == 'email':
+            email_notif(serializer.data)
+        elif notif_type.lower() == 'sms':
+            SMS_notif(serializer.data)
+        elif notif_type.lower() == 'telegram_message':
+            telegram_notif(serializer.data)
+        elif notif_type.lower() == 'firebase_message':
+            firebase_notif(serializer.data)
+        elif notif_type.lower() == 'google_calendar':
+            google_calendar_notif(serializer.data)
 
     if notif.repeat > 0:
         notif.repeat -= 1
-
     notif.save()
     serializer = NotificationSerializer(notif)  # we need it for resume_task.apply_async
 
-    resume_task.apply_async(
-        kwargs={'data': serializer.data},
-        countdown=notif.interval * SECONDS_OF_HOUR
-    )
+    if notif.repeat > 0 or notif.repeat == -1:
+        task = resume_task.apply_async(
+            kwargs={'data': serializer.data},
+            countdown=notif.interval * SECONDS_OF_HOUR
+        )
+        notif.task_id = task.id
+        notif.save()
 
 
 @app.task
 def edit_notif_task(serializer):
     # straight task update isn't implemented in celery
     notif = serializer.instance
-    app.control.revoke(task_id=notif.task_id, terminate=True)
+    task_ids = notif.task_id.split(', ')
+    for task_id in task_ids:
+        app.control.revoke(task_id=task_id, terminate=True)
+
     add_notif_task(serializer)
 
 
 @app.task
 def delete_notif_task(serializer):
     notif = serializer.instance
-    notif.repeat = -2
-    notif.save()
-    app.control.revoke(task_id=notif.task_id, terminate=True)
+    task_ids = notif.task_id.split(', ')
+    for task_id in task_ids:
+        app.control.revoke(task_id=task_id, terminate=True)
 
 
 @app.task
@@ -208,5 +194,6 @@ def hello_test(data):
 
 # task = hello_test.apply_async(
 #     kwargs={'data': 'notif'},
-#     countdown=2
+#     countdown=2,
+#     expires=10
 # )

@@ -178,7 +178,8 @@ class TestSchedularNotification(TestCase):
     def test_delete_task(self):
         task = hello_test.apply_async(
             kwargs={'data': 'deleting task'},
-            countdown=3
+            # countdown=3
+            eta=datetime.now() + timedelta(seconds=2)
         )
         app.control.revoke(task_id=task.id, terminate=True)
 

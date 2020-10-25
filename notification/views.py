@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView, DestroyAPIView, ListAPIView
@@ -20,12 +22,16 @@ class AddNotificationAPI(ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = NotificationSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
 
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
         tasks.add_notif_task(serializer)
 
-        return JsonResponse(serializer.data)
+        data = serializer.data
+        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
+        data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
+        return JsonResponse(data)
 
 
 class EditNotificationAPI(RetrieveUpdateAPIView):
@@ -42,7 +48,10 @@ class EditNotificationAPI(RetrieveUpdateAPIView):
 
         tasks.edit_notif_task(serializer)
 
-        return JsonResponse(serializer.data)
+        data = serializer.data
+        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
+        data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
+        return JsonResponse(data)
 
 
 class DeleteNotificationAPI(DestroyAPIView):
@@ -59,4 +68,7 @@ class DeleteNotificationAPI(DestroyAPIView):
         tasks.delete_notif_task(serializer)
         notif.delete()
 
-        return JsonResponse(NotificationSerializer(notif).data, safe=False)
+        data = NotificationSerializer(notif).data
+        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
+        data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
+        return JsonResponse(data)
