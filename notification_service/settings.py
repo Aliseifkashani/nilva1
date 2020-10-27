@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'nilva1.urls'
+ROOT_URLCONF = 'notification_service.urls'
 
 TEMPLATES = [
     {
@@ -62,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nilva1.wsgi.application'
+WSGI_APPLICATION = 'notification_service.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -162,3 +162,7 @@ cache_backend = 'django-cache'
 AUTH_USER_MODEL = 'user.User'
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%m'
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': DATETIME_FORMAT,
+}

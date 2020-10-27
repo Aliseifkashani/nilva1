@@ -8,7 +8,7 @@ from kavenegar import KavenegarAPI, APIException, HTTPException
 from datetime import datetime, timedelta
 from rest_framework.test import APIClient
 
-from nilva1.celery_app import app
+from notification_service.celery_app import app
 from .serializers import NotificationSerializer
 from .tasks import hello_test
 from user.models import User
@@ -48,7 +48,7 @@ class TestSendNotifications(TestCase):
 
     def test_validate_email_incorrect_address(self):
         pass
-        # email_address = "nilva1.info@gmail.com"
+        # email_address = "notification_service.info@gmail.com"
         # response = requests.get(
         #     "https://isitarealemail.com/api/email/validate",
         #     params={'email': email_address})
@@ -124,8 +124,8 @@ class TestSendNotifications(TestCase):
 
 
 class TestSchedularNotification(TestCase):
-    # In a terminal window run "celery -A nilva1 beat -l INFO" .
-    # In another terminal window run "celery -A nilva1 worker -l INFO" .
+    # In a terminal window run "celery -A notification_service beat -l INFO" .
+    # In another terminal window run "celery -A notification_service worker -l INFO" .
     # Then run tests.
     # for now you need to check visually
     
@@ -159,7 +159,7 @@ class TestSchedularNotification(TestCase):
         if serializer.is_valid():
             serializer.save()
         add_notif_task(serializer)
-        # os.system('celery -A nilva1 worker -l INFO')
+        # os.system('celery -A notification_service worker -l INFO')
         # subprocess.call('python manage.py test notification.tests.TestSchedularNotification.test_repeat_interval')
         
         # serializer.instance.delete()

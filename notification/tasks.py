@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
 
-from nilva1.celery_app import app
+from notification_service.celery_app import app
 from notification.serializers import NotificationSerializer
 from user.models import User
 

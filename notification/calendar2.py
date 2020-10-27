@@ -5,7 +5,7 @@ import os
 import django
 from googleapiclient.discovery import build
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nilva1.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "notification_service.settings")
 django.setup()
 
 from notification.models import Notification
