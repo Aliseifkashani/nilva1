@@ -64,7 +64,6 @@ class TestSendNotifications(TestCase):
             'last_name': self.user.last_name,
             'title': 'notif.title',
             'description': 'notif.description',
-            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         try:
@@ -86,7 +85,6 @@ class TestSendNotifications(TestCase):
             'last_name': self.user.last_name,
             'title': 'notif.title',
             'description': 'notif.description',
-            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         try:
@@ -148,12 +146,10 @@ class TestSchedularNotification(TestCase):
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
             "time_created": datetime.now(),
-            "due_date": "2020-10-04 12:30",
             "time_to_send": datetime.now()+timedelta(seconds=2),
             "notification_types": "sms",
             "repeat": 2,
             "interval": 1,
-            "task_id": ""
         }
         serializer = NotificationSerializer(data=context)
         if serializer.is_valid():
@@ -201,12 +197,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         response = self.client.post(reverse('add_notification'), data=context)
         dict_str = response.content.decode("UTF-8")
@@ -219,12 +213,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         self.client.post(reverse('add_notification'), data=context)
         context = {
@@ -232,12 +224,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         self.client.post(reverse('add_notification'), data=context)
         response = self.client.get(reverse('get_notification'))
@@ -253,12 +243,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         response = self.client.post(reverse('add_notification'), data=context).json()
         # print(response.content)
@@ -268,12 +256,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         response = self.client.patch(reverse('edit_notification'), data=context).json()
         self.assertEqual(response['title'], 'test_edit_after')
@@ -284,12 +270,10 @@ class TestNotificationOperationsViews(TestCase):
             "description": "salevat befreis",
             "creator": "mohammadali",
             "relevant_staff": "mohammadali",
-            "due_date": "2020-10-04 12:30",
             "time_to_send": "2020-10-04 12:30",
             "notification_types": "email, sms, telegram bot, firebase, google calendar",
             "repeat": 1,
             "interval": 24,
-            "task_id": ""
         }
         response = self.client.post(reverse('add_notification'), data=context).json()
         response = self.client.delete(reverse('delete_notification'), data={'id': response['id']}).json()

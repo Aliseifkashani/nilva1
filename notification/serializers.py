@@ -5,7 +5,7 @@ from notification.models import Notification
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = '__all__'
+        exclude = ('task_id',)
 
     # if we have other irrelevant data in our request's body, it ignores it and acts well
     def create(self, validated_data):
@@ -17,7 +17,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         instance.creator = validated_data.get('creator', instance.creator)
         instance.relevant_staff = validated_data.get('relevant_staff', instance.relevant_staff)
         instance.time_created = validated_data.get('time_created', instance.time_created)
-        instance.due_date = validated_data.get('due_date', instance.due_date)
         instance.time_to_send = validated_data.get('time_to_send', instance.time_to_send)
         instance.notification_types = validated_data.get('notification_types', instance.notification_types)
         instance.repeat = validated_data.get('repeat', instance.repeat)

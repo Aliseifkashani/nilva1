@@ -1,8 +1,8 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 import django
 import dj_database_url
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,6 +78,8 @@ DATABASES = {
     }
 }
 
+# DATABASES['default'] = dj_database_url.config()
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -101,7 +103,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
@@ -110,20 +111,20 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%M'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # 'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=45),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -149,20 +150,12 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'nilva.info@gmail.com'
 EMAIL_HOST_PASSWORD = 'xiidjxfvujhsvbxm'
 
-# result_backend = 'django-db'
 cache_backend = 'django-cache'
 
 AUTH_USER_MODEL = 'user.User'
-
-DATETIME_FORMAT = '%Y-%m-%d %H:%m'
-
-REST_FRAMEWORK = {
-    'DATETIME_FORMAT': DATETIME_FORMAT,
-}

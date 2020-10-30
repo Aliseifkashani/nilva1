@@ -13,7 +13,6 @@ def test_send_email_to_multiple_people(request):
         'last_name': 'user.last_name',
         'title': 'notif.title',
         'description': 'notif.description',
-        'due_date': datetime.now()
     }
     html_message = render_to_string('mail_template.html', context=context)
     send_mail(

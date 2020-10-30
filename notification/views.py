@@ -29,7 +29,6 @@ class AddNotificationAPI(ListCreateAPIView):
         tasks.add_notif_task(serializer)
 
         data = serializer.data
-        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
         data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
         return JsonResponse(data)
 
@@ -49,7 +48,6 @@ class EditNotificationAPI(RetrieveUpdateAPIView):
         tasks.edit_notif_task(serializer)
 
         data = serializer.data
-        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
         data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
         return JsonResponse(data)
 
@@ -69,6 +67,5 @@ class DeleteNotificationAPI(DestroyAPIView):
         notif.delete()
 
         data = NotificationSerializer(notif).data
-        data['due_date'] = serializer.data['due_date'].replace('T', ' ')[:-9]
         data['time_to_send'] = serializer.data['time_to_send'].replace('T', ' ')[:-9]
         return JsonResponse(data)

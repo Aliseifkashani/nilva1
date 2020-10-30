@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.core.mail import send_mail
 from kavenegar import *
 from django.template.loader import render_to_string
@@ -28,17 +28,17 @@ def add_notif_task(serializer):
                 kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
-        elif notif_type.lower() == 'telegram_message':
+        elif notif_type.lower() == 'telegram bot':
             task = telegram_notif.apply_async(
                 kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
-        elif notif_type.lower() == 'firebase_message':
+        elif notif_type.lower() == 'firebase':
             task = firebase_notif.apply_async(
                 kwargs={'data': serializer.data},
                 eta=notif.time_to_send
             )
-        elif notif_type.lower() == 'google_calendar':
+        elif notif_type.lower() == 'google calendar':
             task = google_calendar_notif.apply_async(
                 kwargs={'data': notif},
                 eta=notif.time_to_send
@@ -67,6 +67,7 @@ def resume_task(data):
     if serializer.is_valid():
         serializer.save()
     notif = serializer.instance
+
     # notif.notification_types is a string like 'email, sms, telegram bot'
     notif_types = notif.notification_types.split(', ')
 
@@ -75,11 +76,11 @@ def resume_task(data):
             email_notif(serializer.data)
         elif notif_type.lower() == 'sms':
             SMS_notif(serializer.data)
-        elif notif_type.lower() == 'telegram_message':
+        elif notif_type.lower() == 'telegram bot':
             telegram_notif(serializer.data)
-        elif notif_type.lower() == 'firebase_message':
+        elif notif_type.lower() == 'firebase':
             firebase_notif(serializer.data)
-        elif notif_type.lower() == 'google_calendar':
+        elif notif_type.lower() == 'google calendar':
             google_calendar_notif(serializer.data)
 
     if notif.repeat > 0:
@@ -130,7 +131,6 @@ def email_notif(data):
             'last_name': user.last_name,
             'title': notif.title,
             'description': notif.description,
-            'due_date': datetime.now()
         }
         html_message = render_to_string('mail_template.html', context=context)
         send_mail(

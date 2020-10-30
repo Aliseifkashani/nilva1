@@ -8,7 +8,7 @@ class NotificationCreationForm(forms.ModelForm):
 
     class Meta:
         model = Notification
-        exclude = ('task_id',)
+        exclude = ('task_id', 'time_created')
 
 
 class NotificationChangeForm(forms.ModelForm):
